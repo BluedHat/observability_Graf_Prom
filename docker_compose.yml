@@ -1,0 +1,44 @@
+version: "3.9"  # optional since v1.27.0
+#criação de volume para os dados(Prometheus e Grafana)
+volumes:
+  prometheus_data:
+  grafana-data:
+#declaração de dados
+services:
+    prometheus:
+      #imagem usada
+      image: bitnami/prometheus:latest
+      container_name: prometheus
+      volumes:
+        #volume de dados e de estrutura -> apelido
+        - ./prometheus/:/etc/prometheus/
+        - prometheus_data:/prometheus
+      command:
+        #arquivo com as configurações do prometheus
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        # declaração do path de armazenamento de dados(storage)
+        - '--storage.tsdb.path=/prometheus'
+        # livrarias referentes aos templates de apresentação de dados
+        - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+        # template de apresentação de dados
+        - '--web.console.templates=/usr/share/prometheus/consoles'
+        # rotina de persistência (restart retornando os dados)
+        - '--web.enable-lifecycle'
+      ports:
+        #porta host/porta docker
+        - "9090:9090"
+
+    grafana:
+      #imagem usada
+      image: grafana/grafana:latest
+      container_name: grafana
+      restart: unless-stopped
+      volumes:
+        #referente ao arquivo criado para link grafana prometheus
+        - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+        #volume padrão grafana
+        - grafana-data:/var/lib/grafana
+      ports:
+        #porta host/porta docker
+        - "3000:3000"
+#Query Exemplo: increase(prometheus_http_requests_total[1m])

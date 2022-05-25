@@ -1,0 +1,7 @@
+#referente ao local aonde o grafana coleta os dados do Prometheus - assim ele aparece automaticamente no grafana
+datasources:
+  - name: Prometheus
+    access: proxy
+    type: prometheus
+    url: http://prometheus:9090
+    isDefault: true

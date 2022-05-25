@@ -1,0 +1,7 @@
+groups:
+  #alerta de teste que apenas indica se a interface está ou não down
+  - name: DemoAlerts
+    rules:
+      - alert: InstanceDown
+        expr: up{job="services"} < 1
+        for: 5m
