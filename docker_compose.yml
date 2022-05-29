@@ -42,3 +42,11 @@ services:
         #porta host/porta docker
         - "3000:3000"
 #Query Exemplo: increase(prometheus_http_requests_total[1m])
+
+    observability:
+      container_name: observability
+      build:
+        context: .
+        dockerfile: Dockerfile
+      ports:
+        - "8081:8081"
